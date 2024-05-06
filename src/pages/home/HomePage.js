@@ -25,7 +25,6 @@ export default function HomePage() {
         renderdData();
     }, [])
 
-
     const renderItem = ({ item }) => (
         <View style={styles.container}>
             <Image source={{ uri: item.poster }} style={styles.images} />
