@@ -1,84 +1,107 @@
 import React, { useEffect, useState } from 'react';
-import {
-    Alert,
-    FlatList,
-    Image,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    useColorScheme,
-    View,
-} from 'react-native';
+import { FlatList, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { listData } from '../../services/movieServices';
 
 export default function HomePage() {
-    const [dataMovies, setDataMovies] = useState({});
+    const [dataMovies, setDataMovies] = useState([]);
 
     useEffect(() => {
-        const renderdData = async () => {
-            const response = await listData();
-            setDataMovies(response);
+        const fetchData = async () => {
+            try {
+                const response = await listData();
+                setDataMovies(response);
+            } catch (error) {
+                console.error('Erro ao carregar os dados:', error);
+            }
         }
 
-        renderdData();
-    }, [])
+        fetchData();
+    }, []);
 
     const renderItem = ({ item }) => (
-        <View style={styles.container}>
-            <Image source={{ uri: item.poster }} style={styles.images} />
-            <Text style={styles.title}>{item.title}</Text>
+        <View style={styles.movieContainer}>
+            <Image source={{ uri: item.Poster }} style={styles.moviePoster} />
+            <View style={styles.movieDetails}>
+                <Text style={styles.movieTitle}>{item.Title}</Text>
+                <Text style={styles.movieInfo}>{item.Year} | {item.Genre}</Text>
+                <Text style={styles.movieInfo}>Diretor: {item.Director}</Text>
+                <Text style={styles.moviePlot}>{item.Plot}</Text>
+            </View>
         </View>
     );
 
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <Image
+                    source={require('../../../assets/netflixLogo.png')}
+                    style={styles.logo}
+                />
+                <Image source={require('../../../assets/icone-lupa.png')}
+                    style={styles.lupa}
+                />
+            </View>
+
             <FlatList
                 data={dataMovies}
                 renderItem={renderItem}
-              
+                keyExtractor={(item) => item.imdbID}
+                contentContainerStyle={styles.listContainer}
             />
         </SafeAreaView>
     );
 }
 
-
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: 'black',
-        paddingTop: 50,
-        justifyContent: 'flex-start',
-        paddingLeft: 15,
-        paddingRight: 15,
+    },
+    listContainer: {
+        paddingVertical: 20,
+        paddingHorizontal: 10,
+    },
+    movieContainer: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginBottom: 20,
+    },
+    moviePoster: {
+        width: 100,
+        height: 150,
+        marginRight: 15,
+    },
+    movieDetails: {
         flex: 1,
     },
-    smallImage: {
-        width: 70,
-        height: 70,
+    movieTitle: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
+    movieInfo: {
+        color: 'white',
+        fontSize: 14,
+        marginBottom: 5,
+    },
+    moviePlot: {
+        color: 'white',
+        fontSize: 14,
+    },
+
     header: {
-        justifyContent: 'space-between',
-        alignItems: 'center',
         flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 10,
+        paddingTop: 5,
     },
-    search: {
+    logo: {
         width: 50,
         height: 50,
     },
-    content: {
-        flex: 1,
-        backgroundColor: 'black',
+    lupa: {
+        width: 30,
+        height: 30,
     },
-    title: {
-        color: 'white',
-        fontSize: 25,
-        fontWeight: 'bold',
-        marginTop: 10,
-    },
-    images: {
-        width: 140,
-        height: 190,
-        margin: 10,
-    }
 });
