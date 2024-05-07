@@ -26,6 +26,12 @@ export default function HomePage() {
                 <Text style={styles.movieInfo}>{item.Year} | {item.Genre}</Text>
                 <Text style={styles.movieInfo}>Diretor: {item.Director}</Text>
                 <Text style={styles.moviePlot}>{item.Plot}</Text>
+                <View  style={styles.row}>
+                <Text style={styles.moviePlot}>Rating: {item.imdbRating}</Text>
+                <Text style={styles.moviePlot}>Language: {item.Language}</Text>
+                </View>
+
+                 <Text style={styles.movieInfo}>Actors: {item.Actors}</Text>
             </View>
         </View>
     );
@@ -68,7 +74,7 @@ const styles = StyleSheet.create({
     },
     moviePoster: {
         width: 100,
-        height: 150,
+        height: 210,
         marginRight: 15,
     },
     movieDetails: {
@@ -103,5 +109,9 @@ const styles = StyleSheet.create({
     lupa: {
         width: 30,
         height: 30,
+    },
+    row: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
     },
 });
